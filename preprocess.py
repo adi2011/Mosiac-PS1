@@ -7,10 +7,41 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import cv2
-
+import pytesseract
+from pytesseract import Output
 
 # In[4]:
 
+def image_resize(image, width = None, height = None, inter = cv2.INTER_AREA):
+    # initialize the dimensions of the image to be resized and
+    # grab the image size
+    dim = None
+    (h, w) = image.shape[:2]
+
+    # if both the width and height are None, then return the
+    # original image
+    if width is None and height is None:
+        return image
+
+    # check to see if the width is None
+    if width is None:
+        # calculate the ratio of the height and construct the
+        # dimensions
+        r = height / float(h)
+        dim = (int(w * r), height)
+
+    # otherwise, the height is None
+    else:
+        # calculate the ratio of the width and construct the
+        # dimensions
+        r = width / float(w)
+        dim = (width, int(h * r))
+
+    # resize the image
+    resized = cv2.resize(image, dim, interpolation = inter)
+
+    # return the resized image
+    return resized
 
 def borders(here_img, thresh):
     size = here_img.shape
@@ -151,6 +182,14 @@ def localize(main_image, gray_img, localized, bc, show):
 
 def preprocess(bgr_img):#gray image   
     img = bgr_img[:]
+    # d = pytesseract.image_to_data(img, output_type=Output.DICT)
+    # n_boxes = len(d['level'])
+    # for i in range(n_boxes):
+    #     (x, y, w, h) = (d['left'][i], d['top'][i], d['width'][i], d['height'][i])
+    #     cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
+
+    # cv2.imshow('img', img)
+    # cv2.waitKey(0)
     blur = cv2.GaussianBlur(img,(5,5),0)
     ret,th_img = cv2.threshold(blur,0,255,cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU) #converts black to white and inverse
 
@@ -166,12 +205,13 @@ def preprocess(bgr_img):#gray image
     dummy = int(np.average((tb[2], lr[2]))) + 2
     template = th_img[tb[0]+dummy:tb[1]-dummy, lr[0]+dummy:lr[1]-dummy]
     #print("Process: Segmentation....\n")
+    # th_img=image_resize(th_img, width=1200, height=1200)
+    # template=image_resize(template,width=1200)
+    # kernel = np.ones((5,5),np.uint8)
+    # template = cv2.erode(template,kernel,iterations = 5)
     segments = segmentation(template, text_color)
-    
     #print('Process: Detection.....\n')
     return segments, template, th_img, text_color
-    
-
 
 # In[ ]:
 
