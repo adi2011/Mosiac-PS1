@@ -21,7 +21,7 @@ try:
         img_cpy=im.fromarray(segments[i])
         img_cpy=img_cpy.resize((32,32))
         img_cpy.show()
-        cv2.waitKey(0)
+
 
 
     # img_cpy.save("boka"+str(i)+'.jpg')

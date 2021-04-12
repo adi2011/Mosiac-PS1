@@ -191,7 +191,6 @@ def preprocess(bgr_img):#gray image
     # cv2.waitKey(0)
     blur = cv2.GaussianBlur(img,(5,5),0)
     ret,th_img = cv2.threshold(blur,0,255,cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU) #converts black to white and inverse
-
     rows, cols = th_img.shape
     bg_test = np.array([th_img[i][i] for i in range(5)])
     if bg_test.all() == 0:
@@ -204,10 +203,10 @@ def preprocess(bgr_img):#gray image
     dummy = int(np.average((tb[2], lr[2]))) + 2
     template = th_img[tb[0]+dummy:tb[1]-dummy, lr[0]+dummy:lr[1]-dummy]
     #print("Process: Segmentation....\n")
-    # th_img=image_resize(th_img, width=1200, height=1200)
-    # template=image_resize(template,width=1200)
-    # kernel = np.ones((5,5),np.uint8)
-    # template = cv2.erode(template,kernel,iterations = 5)
+    th_img=image_resize(th_img, width=1200, height=1200)
+    template=image_resize(template,width=1200)
+    kernel = np.ones((5,5),np.uint8)
+    template = cv2.erode(template,kernel,iterations = 5)
     segments = segmentation(template, text_color)
     #print('Process: Detection.....\n')
     return segments, template, th_img, text_color
