@@ -33,8 +33,8 @@ for i in range(len(segments)):
     img_cpy/=255.0
     # print (img_cpy)
     cv2.imshow('template',img_cpy)
-    letter,succ=prediction(img_cpy)
-    print(letter)
+    letter,succ,out=prediction(img_cpy)
+    print(out)
     cv2.waitKey(0)
         
 

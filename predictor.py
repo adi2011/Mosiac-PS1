@@ -45,7 +45,7 @@ def prediction(img):
     x = np.asarray(img, dtype = np.float32).reshape(1,32, 32,1) / 255 
     output = model.predict(x)[0]
     output = output.reshape(26)
-    predicted = np.argmax(output)
+    predicted = np.argmax(output,axis=0)
     success = output[predicted] * 100
-    
-    return predicted, success
+
+    return predicted, success, output
